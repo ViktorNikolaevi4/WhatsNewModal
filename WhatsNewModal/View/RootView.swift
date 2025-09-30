@@ -1,24 +1,21 @@
-
-import Foundation
 import SwiftUI
+import AppKit
 
 struct RootView: View {
     @State private var showWhatsNew = true
 
     var body: some View {
         ZStack {
-            ContentView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .disabled(showWhatsNew)
-            // можно добавить блюр, Нужен ли он ?
-                .blur(radius: showWhatsNew ? 0 : 0)
+            Color.clear.frame(maxWidth: .infinity, maxHeight: .infinity)
             if showWhatsNew {
                 WhatsNewModalView(
                     markdownFileName: "release-notes",
                     preferH1Title: true,
-                    heroAssetName: "рисунок",
-                    onContinue: { showWhatsNew = false }
-                )
+                    icon: NSImage(named: "рисунок")
+                ) {
+                    showWhatsNew = false
+                    NSApp.keyWindow?.close() 
+                }
                 .transition(.opacity)
                 .zIndex(1)
             }
@@ -26,3 +23,4 @@ struct RootView: View {
         .animation(.easeInOut(duration: 0.2), value: showWhatsNew)
     }
 }
+
