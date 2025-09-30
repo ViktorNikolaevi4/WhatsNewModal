@@ -22,7 +22,7 @@ final class BorderlessCardWindow {
                         .fill(Color(nsColor: .windowBackgroundColor))
                         .shadow(color: .black.opacity(0.18), radius: 30, y: 12)
                 )
-                .padding(24)             // поля от краёв (само окно прозрачное)
+                .padding(24)
                 .background(Color.clear)
         )
 
@@ -42,7 +42,7 @@ final class BorderlessCardWindow {
         win.isMovableByWindowBackground = true
         win.titleVisibility = .hidden
         win.titlebarAppearsTransparent = true
-        win.hasShadow = false                // тень рисуем у карточки
+        win.hasShadow = false
         win.isReleasedWhenClosed = true
         win.contentView = host
 
