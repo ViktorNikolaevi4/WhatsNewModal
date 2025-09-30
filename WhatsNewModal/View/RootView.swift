@@ -10,11 +10,13 @@ struct RootView: View {
             ContentView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .disabled(showWhatsNew)
-                .blur(radius: showWhatsNew ? 0 : 0)  // можно добавить блюр, если захочешь ?
+            // можно добавить блюр, Нужен ли он ?
+                .blur(radius: showWhatsNew ? 0 : 0)
             if showWhatsNew {
                 WhatsNewModalView(
                     markdownFileName: "release-notes",
                     preferH1Title: true,
+                    heroAssetName: "рисунок",
                     onContinue: { showWhatsNew = false }
                 )
                 .transition(.opacity)

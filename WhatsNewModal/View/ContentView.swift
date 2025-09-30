@@ -8,7 +8,7 @@ struct WhatsNewModalView: View {
     var title: String = "Что нового"
     var preferH1Title: Bool = true
     var icon: NSImage? = NSApp.applicationIconImage
-
+    var heroAssetName: String? = nil
     var onContinue: (() -> Void)? = nil
 
     @State private var markdownText: String = ""
@@ -16,7 +16,15 @@ struct WhatsNewModalView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            if let icon {
+            if let hero = heroAssetName {
+                Image(hero)
+                    .resizable().interpolation(.high)
+                    .frame(width: 72, height: 72)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(.separator, lineWidth: 1))
+                    .shadow(radius: 8)
+                    .padding(.top, 8)
+            } else if let icon {
                 Image(nsImage: icon)
                     .resizable()
                     .frame(width: 72, height: 72)
@@ -24,9 +32,6 @@ struct WhatsNewModalView: View {
                     .shadow(radius: 8)
                     .padding(.top, 8)
             }
-            Text(runtimeTitle ?? title)
-                .font(.title).bold()
-                .padding(.top, 4)
             ScrollView {
                 Markdown(markdownText)
                 //    .markdownTheme(.gitHub)
