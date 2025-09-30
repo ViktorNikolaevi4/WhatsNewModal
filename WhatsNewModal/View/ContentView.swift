@@ -3,7 +3,9 @@ import SwiftUI
 import MarkdownUI
 
 struct WhatsNewModalView: View {
+
     @Environment(\.dismiss) private var dismiss
+
     var markdownFileName: String = "WhatsNew"
     var title: String = "Что нового"
     var preferH1Title: Bool = true
