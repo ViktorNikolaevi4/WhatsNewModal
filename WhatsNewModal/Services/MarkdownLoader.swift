@@ -5,12 +5,12 @@ import MarkdownUI
 enum MarkdownLoader {
     static func load(named: String) -> String {
         guard let url = Bundle.main.url(forResource: named, withExtension: "md") else {
-            return "*(Файл `\(named).md` не найден в бандле приложения.)*"
+            return "*(File `\(named).md` not found in the application bundle.)*"
         }
         do {
             return try String(contentsOf: url, encoding: .utf8)
         } catch {
-            return "*(Не удалось прочитать `\(named).md`: \(error.localizedDescription))*"
+            return "*(Failed to read `\(named).md`: \(error.localizedDescription))*"
         }
     }
     static func extractH1AndBody(from markdown: String) -> (title: String?, body: String) {

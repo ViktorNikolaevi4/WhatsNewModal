@@ -7,7 +7,7 @@ struct WhatsNewModalView: View {
     @Environment(\.dismiss) private var dismiss
 
     var markdownFileName: String = "WhatsNew"
-    var title: String = "Что нового"
+    var title: String = "What's new"
     var preferH1Title: Bool = true
     var icon: NSImage? = NSApp.applicationIconImage
     var heroAssetName: String? = nil

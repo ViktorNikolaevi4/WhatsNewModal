@@ -14,7 +14,7 @@ Train your memory directly from the widget — quick and fun.
 
 ## 🎨 New Sticker Packs
 
-![Stickers](https://img.icons8.com/color/96/sticker.png)
+![Stickers](https://img.icons8.com/ios-filled/100/brain.png)
 
 Fresh sticker packs to personalize your experience.
 
@@ -22,7 +22,7 @@ Fresh sticker packs to personalize your experience.
 
 ## 🌙 New Scenes for the White Noise Widget
 
-![White Noise](https://img.icons8.com/fluency/96/sound.png)
+![White Noise](https://img.icons8.com/ios/100/grid.png)
 
 More relaxing nature sounds to help you focus or unwind.
 
