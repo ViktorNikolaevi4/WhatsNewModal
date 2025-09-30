@@ -68,7 +68,7 @@ struct WhatsNewModalView: View {
                     .padding(.bottom, 8)
                     .background(.clear)
             }
-            .frame(maxHeight: 360)
+            .frame(maxHeight: 400)
             Button("Continue") {
                 if let onContinue { onContinue() }
             }
@@ -77,8 +77,8 @@ struct WhatsNewModalView: View {
             .padding(.bottom, 4)
         }
         .padding(24)
-        .frame(minWidth: 640, minHeight: 520)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(minWidth: 420, minHeight: 520)
+     //   .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(drawBackground ? Color(nsColor: .windowBackgroundColor) : .clear)
         .accessibilityAddTraits(.isModal)
         .onAppear {
