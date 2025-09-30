@@ -19,31 +19,20 @@ import MarkdownUI
 
 // MARK: - Модальное окно «Что нового»
 struct WhatsNewModalView: View {
-    @Environment(\.dismiss) private var dismiss // окружение для закрытия модалки (.sheet)
-
-    /// Имя markdown-файла без расширения. По умолчанию — "WhatsNew".
+    @Environment(\.dismiss) private var dismiss
     var markdownFileName: String = "WhatsNew"
-
-    /// Заголовок окна по умолчанию (если не найден H1 в файле или выключен preferH1Title)
     var title: String = "Что нового"
-
-    /// Если true — берём заголовок из первого H1 в .md (и убираем его из тела)
     var preferH1Title: Bool = true
-
-    /// Опциональная иконка (по умолчанию иконка приложения)
     var icon: NSImage? = NSApp.applicationIconImage
 
-    /// Текст, считанный из .md файла (без H1, если preferH1Title = true)
-    @State private var markdownText: String = ""
+    // новый колбэк — для режима overlay
+    var onContinue: (() -> Void)? = nil
 
-    /// Заголовок, вычисленный из H1 (если есть)
+    @State private var markdownText: String = ""
     @State private var runtimeTitle: String? = nil
 
     var body: some View {
-        // Сплошное окно-лист: контент занимает весь sheet
         VStack(spacing: 20) {
-
-            // Иконка приложения (опционально)
             if let icon {
                 Image(nsImage: icon)
                     .resizable()
@@ -53,37 +42,33 @@ struct WhatsNewModalView: View {
                     .padding(.top, 8)
             }
 
-            // Заголовок: берём из H1, если он найден; иначе — из свойства title
             Text(runtimeTitle ?? title)
                 .font(.title).bold()
                 .padding(.top, 4)
 
-            // Прокручиваемая область с Markdown-текстом из .md файла
             ScrollView {
                 Markdown(markdownText)
-                    .markdownTheme(.gitHub)                 // тема оформления Markdown
+                //    .markdownTheme(.gitHub)
                     .frame(maxWidth: 560, alignment: .leading)
                     .padding(.horizontal)
                     .padding(.bottom, 8)
+                    .background(.clear)
             }
-            .frame(maxHeight: 360)                           // если текста много — появляется скролл
+            .frame(maxHeight: 360)
 
-            // Кнопка закрытия модалки
-            Button("Continue") { dismiss() }
-                .keyboardShortcut(.defaultAction)            // Enter
-                .buttonStyle(PrimaryCapsuleButtonStyle())
-                .padding(.bottom, 4)
+            Button("Continue") {
+                if let onContinue { onContinue() } else { dismiss() }
+            }
+            .keyboardShortcut(.defaultAction)
+            .buttonStyle(PrimaryCapsuleButtonStyle())
+            .padding(.bottom, 4)
         }
         .padding(24)
-        // Желаемый минимальный размер окна + растягиваем контент на весь лист
         .frame(minWidth: 640, minHeight: 520)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        // Единый фон всего листа (выбери один вариант ниже)
-        .background(Color(nsColor: .windowBackgroundColor)) // системный фон окна macOS
-        // .background(.regularMaterial)                    // или полупрозрачный материал
+        .background(Color(nsColor: .windowBackgroundColor)) // фон всего оверлея
         .accessibilityAddTraits(.isModal)
         .onAppear {
-            // Подгружаем Markdown и (опционально) извлекаем H1 как заголовок
             let raw = MarkdownLoader.load(named: markdownFileName)
             if preferH1Title {
                 let parts = MarkdownLoader.extractH1AndBody(from: raw)
@@ -94,8 +79,8 @@ struct WhatsNewModalView: View {
             }
         }
     }
-
 }
+
 
 // MARK: - Стиль основной капсульной кнопки
 struct PrimaryCapsuleButtonStyle: ButtonStyle {
@@ -159,22 +144,30 @@ enum MarkdownLoader {
 
 // MARK: - Пример интеграции в приложение
 struct RootView: View {
-    // Храним последнюю версию, для которой показывали окно «Что нового»
-    @AppStorage("whatsNewLastShownVersion") private var lastShownVersion: String = ""
-    @State private var showWhatsNew: Bool = true // всегда показываем модалку при запуске
+    @State private var showWhatsNew = true   // показываем сразу для теста
 
     var body: some View {
-        Color.clear.frame(maxWidth: .infinity, maxHeight: .infinity) // без заглушки, пустой фон
-            .sheet(isPresented: $showWhatsNew) {
-                // Теперь заголовок берётся из первого H1 файла release-notes.md автоматически
+        ZStack {
+            // твой основной интерфейс
+            ContentView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .disabled(showWhatsNew)              // блокируем клики под модалкой
+                .blur(radius: showWhatsNew ? 0 : 0)  // можно добавить блюр, если захочешь
+
+            if showWhatsNew {
                 WhatsNewModalView(
                     markdownFileName: "release-notes",
-                    preferH1Title: true
+                    preferH1Title: true,
+                    onContinue: { showWhatsNew = false }
                 )
+                .transition(.opacity) // аккуратное появление/скрытие
+                .zIndex(1)
             }
+        }
+        .animation(.easeInOut(duration: 0.2), value: showWhatsNew)
     }
-    // Показываем окно всегда на старте. Логику «раз за версию» можно вернуть при необходимости.
 }
+
 
 // Заглушка основного контента
 struct ContentView: View {
