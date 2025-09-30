@@ -76,7 +76,7 @@ struct WhatsNewModalView: View {
             .buttonStyle(PrimaryCapsuleButtonStyle())
             .padding(.bottom, 4)
         }
-        .padding(48)
+        .padding(49)
         .frame(minWidth: 420, minHeight: 520)
      //   .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(drawBackground ? Color(nsColor: .windowBackgroundColor) : .clear)
